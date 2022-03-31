@@ -1,0 +1,61 @@
+﻿@page
+@model WebApp.Pages.Game.Create
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    @if (Model.Message != null)
+    {
+        @foreach (var message in Model.Message)
+        {
+            <div class="text-danger">@message</div>
+        }
+    }
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="GameConfig.GameName" class="control-label"></label>
+                <input asp-for="GameConfig.GameName" class="form-control"/>
+                <span asp-validation-for="GameConfig.GameName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.BoardSizeX" class="control-label"></label>
+                <input asp-for="GameConfig.BoardSizeX" class="form-control"/>
+                <span asp-validation-for="GameConfig.BoardSizeX" class="text-danger"></span> 
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.BoardSizeY" class="control-label"></label>
+                <input asp-for="GameConfig.BoardSizeY" class="form-control"/>
+                <span asp-validation-for="GameConfig.BoardSizeY" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Touch Rule</label>
+                    <select class="form-control" style="width: auto" asp-for="TouchRule">
+                        <option></option>
+                        @{
+                            foreach (var touchRule in Model.TouchRules)
+                            {
+                                <option>@touchRule</option>
+                            }
+                        }
+                    </select>
+            </div>
+            <div class="form-group">
+                <a href="Index.cshtml">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
+                </a>
+            </div>
+            <div><a asp-page="/ShipConfigs/Create">Ship Configuration</a></div>
+        </form>
+        <form method="get">
+            <div><a href="../Game/LoadGame?type=json">Load game from json</a></div>
+            <div><a href="../Game/LoadGame?type=db">Load game from db</a></div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

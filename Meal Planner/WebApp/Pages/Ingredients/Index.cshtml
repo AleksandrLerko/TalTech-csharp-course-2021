@@ -1,0 +1,77 @@
+@page
+@model WebApp.Pages_Ingredients.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Ingredients</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<form method="get">
+        <div class="row">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="searchByLocation" class="form-label">Search by location</label>
+                    <input type="text" class="form-control" id="searchByLocation" name="searchByLocation" placeholder="shelf..." value="@Model.SearchByLocation">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-1">
+                    <input type="submit" value="Search" name="action" class="btn btn-primary"/>
+                </div>
+                <div>
+                    @if (Model.SearchByLocation != null)
+                        {
+                            <input type="submit" value="Clear" name="action" class="btn btn-warning"/>
+                        }
+                </div>
+            </div>
+        </div>
+    </form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredient[0].IngredientName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredient[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredient[0].Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredient[0].Amount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Ingredient) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IngredientName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

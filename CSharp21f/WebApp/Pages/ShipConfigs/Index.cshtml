@@ -1,0 +1,60 @@
+@page
+@model WebApp.Pages_ShipConfigs.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipConfig[0].ShipName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipConfig[0].Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipConfig[0].ShipSizeX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipConfig[0].ShipSizeY)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipConfig[0].GameConfig)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ShipConfig) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipSizeX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipSizeY)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameConfig!.GameConfigId)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ShipConfigId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ShipConfigId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ShipConfigId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

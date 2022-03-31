@@ -1,0 +1,355 @@
+﻿@page
+@using BattleShipBrain
+@using WebApp.Helpers
+@model WebApp.Pages.Game.Index
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+.table-td {
+    height: 32px; 
+    width: 32px; 
+    border: #000 solid;
+    }
+.coordinates-input{
+    width: 40px;
+}
+
+.inputs{
+    padding-top: 10px;    
+}
+    
+</style>
+<body>
+    @{
+        var gameName = Model.Request.Query["GameName"].ToString();
+        if (gameName.Length == 0)
+        {
+            gameName = Model.Request.Query["save"].ToString();
+        }
+        var score0 = SessionHelper.GetObjectFromJson<int>(HttpContext.Session, "Score0");
+        var score1 = SessionHelper.GetObjectFromJson<int>(HttpContext.Session, "Score1");
+        var ReplayCount = SessionHelper.GetObjectFromJson<int>(HttpContext.Session, "ReplayCount");
+        var isFinished = false;
+    }
+<form method="get">
+    <div>End game <input name="GameName" value="@gameName" hidden="hidden"/> <input name="End" value="true" hidden="hidden"/><input type="submit"/></div>
+</form>
+<form method="get">
+    <div>Start game <input name="GameName" value="@gameName" hidden="hidden"/> <input name="IsStarted" value="true" hidden="hidden"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/><input type="submit"/> </div>
+</form>
+<form method="get">
+    <div>Save game to json <input name="GameName" value="@gameName" hidden="hidden"/> <input name="SaveGame" value="true" hidden="hidden"/> <input hidden="hidden" name="type" value="json"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/> <input type="submit"/></div>
+</form>
+<form method="get">
+    <div>Save game to db <input name="GameName" value="@gameName" hidden="hidden"/>  <input name="SaveGame" value="true" hidden="hidden"/> <input hidden="hidden" name="type" value="db"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/> <input type="submit"/></div>
+</form>
+<form method="get">
+    <div><input type="submit"  value="Undo" name="Replay"/> <input name="GameName" value="@gameName" hidden="hidden"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/> <input hidden="hidden" name="ReplayCount" value="@ReplayCount"/></div>
+</form>
+@* @if (Model.Replay.Equals("Undo") || Model.Replay.Equals("Continue")) *@
+@* { *@
+@*     <form method="get"> *@
+@*         <div><input type="submit"  value="Redo" name="Replay"/> <input name="GameName" value="@gameName" hidden="hidden"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/> <input hidden="hidden" name="ReplayCount" value="@ReplayCount"/></div> *@
+@*     </form> *@
+@* } *@
+<form method="get">
+    <div><input type="submit"  value="Redo" name="Replay"/> <input name="GameName" value="@gameName" hidden="hidden"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/> <input hidden="hidden" name="ReplayCount" value="@ReplayCount"/></div>
+</form>
+<form method="get">
+        <div><input type="submit"  value="Continue" name="Replay"/> <input name="GameName" value="@gameName" hidden="hidden"/> <input hidden="hidden" name="playerId" value="@Model.Request.Query["playerId"]"/> <input hidden="hidden" name="ReplayCount" value="@ReplayCount"/></div>
+</form>
+@if (!Request.Query["IsStarted"].Equals("true") || Model.ActionBomb.Equals("miss"))
+{
+    <form method="get">
+        <div>Next player <input name="GameName" value="@gameName" hidden="hidden"/> <input name="IsStarted" value="true" hidden="hidden"/> <input type="submit" name="playerId" value="@(Model.PlayerId == 0 ? 1 : 0)"/></div>
+    </form>   
+}
+@if (score0 == Model.GameConfig.BoardSizeX / 2)
+{
+    Model.Win = "Player 0 is winner!";
+    Model.IsFinished = true;
+    isFinished = true;
+}
+
+@if (score1 == Model.GameConfig.BoardSizeY / 2)
+{
+    Model.Win = "Player 1 is winner!";
+    Model.IsFinished = true;
+    isFinished = true;
+}
+@if (Model.IsFinished)
+{
+    isFinished = true;
+    <div class="row"><p style="font-size: 20px">@Model.Win</p></div>
+}
+
+<div>Now plays - Player @Model.PlayerId</div>
+<div class="row">
+    <div class="row">
+    <div style="width: 50%">
+        <div style="float: left">
+            <table>
+                @{
+                    //Console.WriteLine("In html player value - " + Model.PlayerId);
+                    var widthShipBoard = Model.GameBrain.GetBoard(Model.PlayerId, "A", null).GetLength(0);
+                    var heightShipBoard = Model.GameBrain.GetBoard(Model.PlayerId, "A", null).GetLength(1);
+                    var i = 0;
+                    var num = 0;
+                    var exist = SessionHelper.GetObjectFromJson<int>(HttpContext.Session, "Player"  + "Count") != null;
+                    if (exist)
+                    {
+                        num = SessionHelper.GetObjectFromJson<int>(HttpContext.Session, "Player"  + "Count");
+                    }
+                }
+                @if (Model.PlayerId == 0)
+                {
+                    <div>You - @score0</div>
+                }
+                else
+                {
+                    <div>You - @score1</div>
+                }
+                @for (var rowIndex = -1; rowIndex < heightShipBoard; rowIndex++)
+                {
+                    if (i == 0)
+                    {
+                        <tr>
+                            @for (var colIndex = -1; colIndex < widthShipBoard; colIndex++)
+                            {
+                                if (i == 0)
+                                {
+                                    i = 1;
+                                    <td class="table-td"></td>
+                                }
+                                else
+                                {
+                                    <td class="table-td">@colIndex</td>
+                                }
+                            }
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr style="border:1px solid black;">
+                            @{
+                                i = 0;
+                            }
+                            @for (var colIndex = -1; colIndex < widthShipBoard; colIndex++)
+                            {
+                                if (i == 0)
+                                {
+                                    i = 1;
+                                    <td class="table-td">@rowIndex</td>
+                                }
+                                else
+                                {
+                                    if (Model.PlayerId == 0)
+                                    {
+                                        <td class="table-td" style="border:1px solid black;">@GetBoardStateSymbol(Model.GameBrain.GetBoard(0, "A", null)[colIndex, rowIndex])</td> 
+                                    }
+                                    else
+                                    {
+                                        <td class="table-td" style="border:1px solid black;">@GetBoardStateSymbol(Model.GameBrain.GetBoard(1, "A", null)[colIndex, rowIndex])</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </table>
+            @if (Model.Message != null)
+            {
+                @foreach (var message in Model.Message)
+                {
+                    <div class="text-danger, row">@message</div>
+                }
+            }
+            <div class="row">
+                @switch (Model.PlayerId)
+                {
+                    case 0:
+                        if (num < 5)
+                        {
+                            <form method="get">
+                                <input hidden="hidden" value="@Request.Query["GameName"]" name="GameName"/>
+                                <input hidden="hidden" name="IsPlaceable" value="true"/>
+                                <input hidden="hidden" name="playerId" value="@Request.Query["playerId"]"/>
+                                <input hidden="hidden" name="ShipCount" value="@Model.GameBrain.ShipCount"/>
+                                <input type="submit" class="btn btn-primary" value="Set ships automatically" name="Action"/>
+                            </form>
+                        }
+                        break;
+                    case 1:
+                        if (num < 10)
+                        {
+                            <form method="get">
+                                <input hidden="hidden" value="@Request.Query["GameName"]" name="GameName"/>
+                                <input hidden="hidden" name="IsPlaceable" value="true"/>
+                                <input hidden="hidden" name="playerId" value="@Request.Query["playerId"]"/>
+                                <input hidden="hidden" name="ShipCount" value="@Model.GameBrain.ShipCount"/>
+                                <input type="submit" class="btn btn-primary" value="Set ships automatically" name="Action"/>
+                            </form>
+                        }
+                        break;
+                }
+                @foreach (var ship in Model.GameBrain.GetShipConfig(Model.PlayerId))
+                {
+                    switch (Model.PlayerId)
+                    {
+                        case 0:
+                            if (num < 5)
+                            {
+                                <form method="get">
+                                    <div class="inputs">
+                                        <div>
+                                            <div hidden="hidden"><input hidden="hidden" value="@Request.Query["GameName"]" name="GameName"/></div>
+                                            <div hidden="hidden"><input hidden="hidden" name="IsPlaceable" value="true"/></div>
+                                            @ship.Name<input hidden="hidden" class="coordinates-input" name="ShipName" value="@ship.Name"/> X: <input class="coordinates-input" name="shipX"> Y: <input class="coordinates-input" name="shipY"/> Is vertical: <input type="checkbox" name="IsVertical"/> Number of available ships: @ship.Quantity <input hidden="hidden" name="x" value="@Request.Query["x"]"/> <input hidden="hidden" name="y" value="@Request.Query["y"]"/><input hidden="hidden" name="IsStarted" value="@Request.Query["IsStarted"]"/> <input name="playerId" hidden="hidden" value="@Request.Query["playerId"]"/><input type="submit"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            }
+                            break;
+                        case 1:
+                            if (num < 10)
+                            {
+                                <form method="get">
+                                    <div class="inputs">
+                                        <div>
+                                            <div hidden="hidden"><input hidden="hidden" value="@Request.Query["GameName"]" name="GameName"/></div>
+                                            <div hidden="hidden"><input hidden="hidden" name="IsPlaceable" value="true"/></div>
+                                            @ship.Name<input hidden="hidden" class="coordinates-input" name="ShipName" value="@ship.Name"/> X: <input class="coordinates-input" name="shipX"> Y: <input class="coordinates-input" name="shipY"/> Is vertical: <input type="checkbox" name="IsVertical"/> Number of available ships: @ship.Quantity <input hidden="hidden" name="x" value="@Request.Query["x"]"/> <input hidden="hidden" name="y" value="@Request.Query["y"]"/><input hidden="hidden" name="IsStarted" value="@Request.Query["IsStarted"]"/> <input name="playerId" hidden="hidden" value="@Request.Query["playerId"]"/><input type="submit"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            }
+                            break;
+                    }
+                }
+            </div>
+            <input type="submit"/>
+        </div>
+    </div>
+    <div style="width: 50%">
+            <div style="float: right">
+                <table>
+                    @{
+                        var widthShipBoardB = Model.GameBrain.GetBoard(Model.PlayerId, "A", null).GetLength(0);
+                        var heightShipBoardB = Model.GameBrain.GetBoard(Model.PlayerId, "A", null).GetLength(1);
+                        var iB = 0;
+                    }
+                    @if (Model.PlayerId == 0)
+                    {
+                        <div>Enemy - @score1</div>
+                    }
+                    else
+                    {
+                        <div>Enemy - @score0</div>
+                    }
+                    @for (var rowIndex = -1; rowIndex < heightShipBoardB; rowIndex++)
+                    {
+                        if (iB == 0)
+                        {
+                            <tr>
+                                @for (var colIndex = -1; colIndex < widthShipBoardB; colIndex++)
+                                {
+                                    if (iB == 0)
+                                    {
+                                        iB = 1;
+                                        <td class="table-td"></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="table-td">@colIndex</td>
+                                    }
+                                }
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="border:1px solid black;">
+                                @{
+                                    iB = 0;
+                                    var isStarted = Model.Request.Query["IsStarted"].ToString();
+                                }
+                                @for (var colIndex = -1; colIndex < widthShipBoard; colIndex++)
+                                {
+                                    if (iB == 0)
+                                    {
+                                        iB = 1;
+                                        <td class="table-td">@rowIndex</td>
+                                    }
+                                    else
+                                    {
+                                        Model.Hidde = true;
+                                        @if ("true".Equals(isStarted) && Model.ActionBomb.Equals("hit") || Model.ActionBomb.Equals("gameStart") && !SessionHelper.GetObjectFromJson<bool>(HttpContext.Session, "IsFinished"))
+                                        {
+                                            if (Model.PlayerId == 0 )
+                                            {
+                                                <td class="table-td" style="border:1px solid black;" onclick="window.location.href='?GameName=@(Model.GameConfig.GameName)&IsStarted=true&x=@(colIndex)&y=@(rowIndex)&Place=true&playerId=@(Model.Request.Query["playerId"])&Score0=@score0&Score1=@score1'">@GetBoardStateSymbol(Model.GameBrain.GetBoard(1, "A", null)[colIndex, rowIndex])</td> 
+                                            }
+                                            else
+                                            {
+                                                <td class="table-td" style="border:1px solid black;" onclick="window.location.href='?GameName=@(Model.GameConfig.GameName)&IsStarted=true&x=@(colIndex)&y=@(rowIndex)&Place=true&playerId=@(Model.Request.Query["playerId"])&Score0=@score0&Score1=@score1'">@GetBoardStateSymbol(Model.GameBrain.GetBoard(0, "A", null)[colIndex, rowIndex])</td> 
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Model.PlayerId == 0)
+                                            {
+                                                <td class="table-td" style="border:1px solid black;">@GetBoardStateSymbol(Model.GameBrain.GetBoard(1, "A", null)[colIndex, rowIndex])</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="table-td" style="border:1px solid black;">@GetBoardStateSymbol(Model.GameBrain.GetBoard(0, "A", null)[colIndex, rowIndex])</td> 
+                                            }
+                                        }
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div style="width: 50%">
+        </div>
+    </div>
+</div>
+</body>
+
+@functions
+{
+    string GetBoardStateSymbol(BoardSquareState state)
+    {
+        switch (state.IsShip, state.IsBomb, state.IsTaken)
+        {
+            case (false, false, false):
+                return " "; // empty
+            case (false, true, false):
+                return "x"; // miss            
+            case (false, true, true):
+                return "x"; // miss
+            case (true, false, false):
+                if (Model.Hidde)
+                {
+                    return " "; // display ship on enemy board
+                }
+                else
+                {
+                    return "8"; // display ship on your board
+                }
+
+            case (true, true, false):
+                return "*"; // sinked ship            
+            case (true, true, true):
+                return "*"; // sinked ship
+        }
+        return " ";
+    }
+}

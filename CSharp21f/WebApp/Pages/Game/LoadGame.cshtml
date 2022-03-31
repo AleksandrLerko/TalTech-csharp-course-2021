@@ -1,0 +1,36 @@
+﻿@page
+@model WebApp.Pages.Game.LoadGame
+
+@{
+    ViewData["Title"] = "Index";
+}
+<form method="post">
+    <div class="form-group">
+        <label asp-for="GameSaveNames"></label>
+        <select class="form-control" style="width: auto" asp-for="CurrentSave">
+            <option></option>
+            @{
+                if (Model.SaveType.Equals("json"))
+                {
+                    foreach (var fileName in Model.GameSaveNames)
+                    {
+                        var displayName = "";
+                        var file1 = fileName.Split(".");
+                        var file2 = file1[0].Split(@"\");
+                        displayName = file2[file2.Length - 1];
+                        <option>@displayName</option>
+                    }
+                }
+                else
+                {
+                    foreach(var gameName in Model.GameSaveNames)
+                    {
+                        <option>@gameName</option>
+                    }
+                }
+            }
+        </select>
+        <input type="hidden" asp-for="SaveType"/>
+        <input type="submit"/>
+    </div>
+</form>

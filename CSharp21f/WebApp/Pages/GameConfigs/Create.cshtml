@@ -1,0 +1,51 @@
+@page
+@model WebApp.Pages_GameConfigs.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>GameConfig</h4>
+<hr />
+<div class="row">
+    @if (Model.Message != null)
+    {
+        @foreach (var message in Model.Message)
+        {
+            <div class="text-danger">@message</div>
+        }
+    }
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="GameConfig.GameName" class="control-label"></label>
+                <input asp-for="GameConfig.GameName" class="form-control"/>
+                <span asp-validation-for="GameConfig.GameName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.BoardSizeX" class="control-label"></label>
+                <input asp-for="GameConfig.BoardSizeX" class="form-control"/>
+                <span asp-validation-for="GameConfig.BoardSizeX" class="text-danger"></span> 
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.BoardSizeY" class="control-label"></label>
+                <input asp-for="GameConfig.BoardSizeY" class="form-control"/>
+                <span asp-validation-for="GameConfig.BoardSizeY" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+            <div><a asp-page="/ShipConfigs/Index">Ship Configuration</a></div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

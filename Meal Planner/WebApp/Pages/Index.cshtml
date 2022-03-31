@@ -1,0 +1,88 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+<div class="text-center">
+    <h1 class="display-4">Meal Planner</h1>
+</div>
+
+<form method="get">
+    <div class="row">
+        <div class="col-4">
+            <div class="mb-3">
+                <label for="searchName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="searchName" name="searchName" placeholder="cake" value="@Model.SearchName">
+            </div>
+            <div class="mb-3">
+                <label for="searchIngredientPositive" class="form-label">Search with ingredients (comma separated list)</label>
+                <input type="text" class="form-control" id="searchIngredientPositive" name="searchIngredientPositive" placeholder="sugar, milk" value="@Model.SearchIngredientPositive">
+            </div>            
+            <div class="mb-3">
+                <label for="searchIngredientNegative" class="form-label">Search without ingredients (comma separated list)</label>
+                <input type="text" class="form-control" id="searchIngredientNegative" name="searchIngredientNegative" placeholder="tomatoes, fish" value="@Model.SearchIngredientNegative">
+            </div>            
+            <div class="mb-3">
+                <label for="searchTime" class="form-label">Search by time</label>
+                <input type="text" class="form-control" id="searchTime" name="searchTime" placeholder="30" value="@Model.SearchTime">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-1">
+                <input type="submit" value="Search" name="action" class="btn btn-primary"/>
+            </div>
+            @if (Model.SearchIngredientPositive != null || Model.SearchName != null || Model.SearchIngredientNegative != null || Model.SearchTime != null)
+                {
+                    <input type="submit" value="Clear" name="action" class="btn btn-warning"/>
+                }
+            <a asp-page="./Recipes/Create" >Add Recipe</a>
+            <a asp-page="./Ingredients/Create" >Add Ingredients</a>
+            <a asp-page="./RecipeIngredients/Create" >Add Recipe ingredients configuration</a>
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <h2 class="top">Meals you could currently prepare</h2>
+        <h3 class="alert-warning" style="text-align: center">@if(Model.ErrorMessage != ""){@Model.ErrorMessage}</h3>
+    </tr>
+    <tr>
+        <th>
+            Product Name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Recipe[0].Servings)
+        </th>
+        <th>
+            Actions
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <form method="get">
+        @foreach (var item in Model.Recipe)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RecipeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Servings)
+                    </td>
+                    <td>
+                        <a asp-page="./Food/Cook" asp-route-id="@item.Id">Create</a> |
+                        <a asp-page="./Recipes/Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-page="./Recipes/Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+    </form>
+    </tbody>
+</table>
+

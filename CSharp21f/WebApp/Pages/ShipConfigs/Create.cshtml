@@ -1,0 +1,114 @@
+@page
+@model WebApp.Pages_ShipConfigs.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ShipConfig</h4>
+<hr />
+<div class="row">
+    <form method="post" class="form-control-lg"><input type="submit" class="btn btn-primary" value="Quantity" asp-for="Action"/></form>
+    <form method="post" class="form-control-lg"><input type="submit" class="btn btn-primary" value="Size" asp-for="Action"/></form>
+    <form method="post" class="form-control-lg"><input type="submit" class="btn btn-primary" value="Remove" asp-for="Action"/></form>
+    <form method="post" class="form-control-lg"><input type="submit" class="btn btn-primary" value="Add" asp-for="Action"/></form>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @{
+                switch (Model.Action)
+                {
+                    case "Quantity":
+                        <select class="form-control" style="width: auto" asp-for="CurrentSelectedShip">
+                            <option></option>
+                            @{
+                                foreach (var shipConfig in Model.ShipConfigs)
+                                {
+                                    <option>@shipConfig.Name</option>
+                                }
+                            }
+                        </select>
+                        <div class="form-group">
+                            <label asp-for="ShipConfQuantity" class="control-label"></label>
+                            <input asp-for="ShipConfQuantity" class="form-control"/>
+                            <span asp-validation-for="ShipConfQuantity" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Change quantity" class="btn btn-primary" asp-for="Submit"/>
+                        </div>
+                        break;
+                    case "Size":
+                        <select class="form-control" style="width: auto" asp-for="CurrentSelectedShip">
+                            <option></option>
+                            @{
+                                foreach (var shipConfig in Model.ShipConfigs)
+                                {
+                                    <option>@shipConfig.Name</option>
+                                }
+                            }
+                        </select>
+                        <div class="form-group">
+                            <label asp-for="ShipConfSize" class="control-label"></label>
+                            <input asp-for="ShipConfSize" class="form-control"/>
+                            <span asp-validation-for="ShipConfSize" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Change size" class="btn btn-primary" asp-for="Submit"/>
+                        </div>
+                        break;
+                    case "Remove":
+                        <select class="form-control" style="width: auto" asp-for="CurrentSelectedShip">
+                            <option></option>
+                            @{
+                                foreach (var shipConfig in Model.ShipConfigs)
+                                {
+                                    <option>@shipConfig.Name</option>
+                                }
+                            }
+                        </select>
+                        <div class="form-group">
+                            <input type="submit" value="Remove ship" class="btn btn-primary" asp-for="Submit"/>
+                        </div>
+                        break;
+                    case "Add":
+                        <div class="form-group">
+                            <label asp-for="ShipConfig.Name" class="control-label"></label>
+                            <input asp-for="ShipConfig.Name" class="form-control"/>
+                            <span asp-validation-for="ShipConfig.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ShipConfig.Quantity" class="control-label"></label>
+                            <input asp-for="ShipConfig.Quantity" class="form-control"/>
+                            <span asp-validation-for="ShipConfig.Quantity" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ShipConfig.ShipSizeX" class="control-label"></label>
+                            <input asp-for="ShipConfig.ShipSizeX" class="form-control"/>
+                            <span asp-validation-for="ShipConfig.ShipSizeX" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ShipConfig.ShipSizeY" class="control-label"></label>
+                            <input asp-for="ShipConfig.ShipSizeY" class="form-control"/>
+                            <span asp-validation-for="ShipConfig.ShipSizeY" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Add ship" class="btn btn-primary" asp-for="Submit"/>
+                        </div>
+                        break;
+                }
+            }
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/Game/Create">Back to game create</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

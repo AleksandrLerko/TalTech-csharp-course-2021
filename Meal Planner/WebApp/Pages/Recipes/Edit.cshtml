@@ -1,0 +1,82 @@
+@page
+@model WebApp.Pages_Recipes.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Recipe</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Recipe.RecipeName" class="control-label"></label>
+                <input asp-for="Recipe.RecipeName" class="form-control" />
+                <span asp-validation-for="Recipe.RecipeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe.Servings" class="control-label"></label>
+                <input asp-for="Recipe.Servings" class="form-control" />
+                <span asp-validation-for="Recipe.Servings" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe.Category" class="control-label"></label>
+                <input asp-for="Recipe.Category" class="form-control" />
+                <span asp-validation-for="Recipe.Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe.TimeNeeded" class="control-label"></label>
+                <input asp-for="Recipe.TimeNeeded" class="form-control" />
+                <span asp-validation-for="Recipe.TimeNeeded" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Recipe.Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<h4>Ingredients</h4>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Recipe!.RecipeIngredients!.First().Ingredient)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Recipe!.RecipeIngredients!.First().Qty)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Recipe.RecipeIngredients!) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ingredient!.IngredientName)<br/>
+                <small>@Html.DisplayFor(modelItem => item.Comment)</small>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+            <td>
+                <a asp-page="/RecipeIngredients/Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="/RecipeIngredients/Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <a asp-page="/Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

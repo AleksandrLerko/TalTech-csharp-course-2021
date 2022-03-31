@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BattleShipBrain\BattleShipBrain.csproj" />
+      <ProjectReference Include="..\DAL\DAL.csproj" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\GameBoards\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameBoards\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameBoards\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameBoards\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameBoards\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameConfigs\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameConfigs\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameConfigs\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameConfigs\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameConfigs\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\ShipConfigs\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\ShipConfigs\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\ShipConfigs\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\ShipConfigs\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\ShipConfigs\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Ships\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Ships\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Ships\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Ships\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Ships\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="GameHistory" />
+      <Folder Include="GameHistoryTemp" />
+      <Folder Include="GamePlaySave" />
+      <Folder Include="GameSaves" />
+      <Folder Include="ConfigSaves" />
+    </ItemGroup>
+
+</Project>
